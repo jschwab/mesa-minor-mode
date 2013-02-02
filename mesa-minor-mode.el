@@ -18,17 +18,19 @@
   ;; the body
   (if mesa-minor-mode
   
-      ;; to start the mode store the old tags file and then set the
-      ;; buffer local one to be the mesa tags file
-
+      ;; turn mesa-minor-mode on
       (progn
-        (make-local-variable 'mesa-minor-mode-initial-tags-file-name)
-        (setq mesa-minor-mode-initial-tags-file-name tags-file-name)
-        (set (make-local-variable 'tags-file-name) mesa-tags-file-name))
 
-    ;; restore our old tags file
+        ;; this buffer will just use the MESA TAGS
+        (set (make-local-variable 'tags-file-name) mesa-tags-file-name)
+        (set (make-local-variable 'tags-table-list) (list mesa-tags-file-name)))
+
+  ;; turn mesa-minor-mode off
     (progn
-      (setq tags-file-name mesa-minor-mode-initial-tags-file-name)))
+
+      ;; restore the old global tags settings
+      (kill-local-variable 'tags-file-name)
+      (kill-local-variable 'tags-table-list)))
 
   ;; the group
   :group 'mesa
