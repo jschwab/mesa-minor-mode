@@ -21,17 +21,14 @@
       ;; turn mesa-minor-mode on
       (progn
 
-        ;; this buffer will just use the MESA TAGS
-        (set (make-local-variable 'tags-file-name) mesa-tags-file-name)
-        (set (make-local-variable 'tags-table-list) (list mesa-tags-file-name)))
+        ;; set the buffer-local tags file to the MESA file
+        (visit-tags-table mesa-tags-file-name t))
 
   ;; turn mesa-minor-mode off
     (progn
 
-      ;; restore the old global tags settings
-      (kill-local-variable 'tags-file-name)
-      (kill-local-variable 'tags-table-list)))
-
+      ;; take MESA out of the global tags table list
+      (delete mesa-tags-file-name tags-table-list)))
   ;; the group
   :group 'mesa
 )
