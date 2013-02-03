@@ -41,3 +41,7 @@ command M-. will jump you to a variable's definition in the
 appropriate .defaults file.  This lets you see the default value and
 surrounding documentation. M-* will jump you back to your place in the
 inlist.  For full details about using tags, read the Emacs docs.
+
+** Toggle Boolean Values
+The mesa-toggle-boolean function switches an inlist value between true
+and false.  This function is bound to C-c C-t by default.

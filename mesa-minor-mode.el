@@ -8,16 +8,28 @@
   "Path to your TAGS file inside of your MESA project.  See `tags-file-name'."
   :group 'mesa)
 
+(defun mesa-toggle-boolean ()
+  "Toggle an inlist flag between .true. <--> .false."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (if (re-search-forward ".true.\\|.false." (line-end-position) t)
+        (replace-match (if (string-equal (match-string 0) ".true.")
+                           ".false." ".true.") nil nil))))
+
 (define-minor-mode mesa-minor-mode
   "Toggle MESA minor mode in the usual way."
   :init-value nil
   ;; The indicator for the mode line.
   :lighter " MESA"
   ;; The minor mode bindings.
-  :keymap nil
+  :keymap
+  '(
+    ("\C-c\C-t" . mesa-toggle-boolean)
+    )
   ;; the body
   (if mesa-minor-mode
-  
+
       ;; turn mesa-minor-mode on
       (progn
 
