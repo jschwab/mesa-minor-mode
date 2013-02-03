@@ -1,6 +1,6 @@
 * mesa-minor-mode
 
-An Emacs minor mode for use with the MESA stellar evolution code.
+An Emacs minor mode for use with the [[http://mesa.sourceforge.net/][MESA stellar evolution code]].
 
 It makes it a bit easier to take advantage of the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][tag-related features]]
 in Emacs when editing MESA inlists.  The default tag file will include
