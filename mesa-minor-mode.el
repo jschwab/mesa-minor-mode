@@ -4,9 +4,29 @@
   :group 'mesa)
 
 (defcustom mesa-tags-file-name
-  (concat (getenv "MESA_DIR") "/star/defaults/TAGS")
-  "Path to your TAGS file inside of your MESA project.  See `tags-file-name'."
+  "TAGS"
+  "Name of the TAGS file inside of your MESA project"
   :group 'mesa)
+
+(defcustom mesa-tags-file-path
+  (concat (getenv "MESA_DIR") "/star/defaults/")
+  "Path to your TAGS file inside of your MESA project"
+  :group 'mesa)
+
+(defcustom mesa-tags-regexp
+  "'/[ \\t]+\\([^ \\t]+\\)[ \\t]*=/\\1/'"
+  "Regexp to recognize tags in defaults files"
+  :group 'mesa
+)
+
+(defun mesa-regen-tags ()
+  "Regenerate the tags file for the current working directory"
+  (interactive)
+  (shell-command (format "etags --language=none --regex=%s -o %s/%s %s*.defaults"
+                           mesa-tags-regexp
+                           mesa-tags-file-path
+                           mesa-tags-file-name
+                           mesa-tags-file-path)))
 
 (defun mesa-toggle-boolean ()
   "Toggle an inlist flag between .true. <--> .false."
@@ -33,8 +53,13 @@
       ;; turn mesa-minor-mode on
       (progn
 
+        ;; set the appropriate comment character
+        (set (make-local-variable 'comment-start) "! ")
+        (set (make-local-variable 'comment-column) 0)
+
         ;; set the buffer-local tags file to the MESA file
-        (visit-tags-table mesa-tags-file-name t))
+        (visit-tags-table (concat mesa-tags-file-path
+                                  mesa-tags-file-name) t))
 
   ;; turn mesa-minor-mode off
     (progn
