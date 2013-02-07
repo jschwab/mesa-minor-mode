@@ -65,13 +65,15 @@ comment at the end of the line."
       ;; turn mesa-minor-mode on
       (progn
 
-        ;; set the appropriate comment character
-        (set (make-local-variable 'comment-start) "! ")
-        (set (make-local-variable 'comment-column) 0)
+        (let ((mesa-tags-file (concat mesa-tags-file-path
+                                      mesa-tags-file-name)))
 
-        ;; set the buffer-local tags file to the MESA file
-        (visit-tags-table (concat mesa-tags-file-path
-                                  mesa-tags-file-name) t))
+          ;; if TAGS file doesn't exist, generate it
+          (if (not (file-exists-p mesa-tags-file))
+              (mesa-regen-tags))
+
+          ;; set the buffer-local tags file to the MESA file
+          (visit-tags-table mesa-tags-file)))
 
   ;; turn mesa-minor-mode off
     (progn
