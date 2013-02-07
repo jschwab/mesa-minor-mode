@@ -9,6 +9,8 @@ everything in the star_job, controls, and pgstar namelists.
 There are also a couple functions to help with toggling booleans and
 commenting/uncommenting things.
 
+I've also produced a [[http://youtu.be/hv6QpIupeww][short screencast]] showing the basic features.
+
 * Installation
 ** Configure Emacs
 Put the .el file in your load-path and then add
@@ -16,6 +18,12 @@ Put the .el file in your load-path and then add
 (require 'mesa-minor-mode)
 #+END_EXAMPLE
 to your Emacs init file.
+** Caveats
+I use this with Emacs 24.2 on OS X, so that's about the only place
+it's had any testing.  (Though I tried it with Emacs 23 and everything
+seemed fine.)  I'm not really much of an elisp hacker, so you
+shouldn't take anything done here as representative of the "right
+way".
 * Usage
 ** Start the Minor Mode
 This is a minor mode because I edit my inlists using f90-mode (mainly
@@ -33,6 +41,14 @@ to your Emacs init file.  (If you're already automatically starting a
 major-mode to edit inlist files, adjust as needed.  I didn't use the
 major-mode hook because I don't want mesa-minor-mode to start every
 time f90-mode does.)
+
+I find it useful to do something similar for the .defaults files that
+will be opened for their documentation, but instead of mesa-minor-mode
+I use read-only view-mode, which keeps me from accidentlly confusing
+them with my inlists and editing them accidentally.
+#+BEGIN_EXAMPLE
+(setq auto-mode-alist  (cons '("\\.defaults\\'" . (lambda () (f90-mode) (view-mode))) auto-mode-alist))
+#+END_EXAMPLE
 ** Generate Tags File
 If a TAGS file doesn't exist when mesa-minor-mode starts, it creates
 one.  It assumes that your MESA_DIR environment variable is set
