@@ -37,6 +37,17 @@
         (replace-match (if (string-equal (match-string 0) ".true.")
                            ".false." ".true.") nil nil))))
 
+;; borrowed from http://www.emacswiki.org/emacs/CommentingCode
+(defun mesa-comment-dwim (&optional arg)
+  "Replaces default behavior of comment-dwim, when it inserts
+comment at the end of the line."
+  (interactive "*P")
+  (comment-normalize-vars)
+  (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
+      (comment-or-uncomment-region
+       (line-beginning-position) (line-end-position))
+    (comment-dwim arg)))
+
 (define-minor-mode mesa-minor-mode
   "Toggle MESA minor mode in the usual way."
   :init-value nil
@@ -46,6 +57,7 @@
   :keymap
   '(
     ("\C-c\C-t" . mesa-toggle-boolean)
+    ("\C-c\C-c" . mesa-comment-dwim)
     )
   ;; the body
   (if mesa-minor-mode
