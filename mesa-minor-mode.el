@@ -20,7 +20,7 @@
 )
 
 (defun mesa-regen-tags ()
-  "Regenerate the tags file for the current working directory"
+  "Regenerate the tags file for the MESA defaults directory"
   (interactive)
   (shell-command (format "etags --language=none --regex=%s -o %s/%s %s*.defaults"
                            mesa-tags-regexp
