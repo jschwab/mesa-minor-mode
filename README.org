@@ -2,46 +2,52 @@
 
 An Emacs minor mode for use with the [[http://mesa.sourceforge.net/][MESA stellar evolution code]].
 
-It makes it a bit easier to take advantage of the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][tag-related features]]
+It makes it easy to take advantage of the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][tag-related features]]
 in Emacs when editing MESA inlists.  The default tag file will include
 everything in the star_job, controls, and pgstar namelists.
 
+There are also a couple functions to help with toggling booleans and
+commenting/uncommenting things.
+
 * Installation
-** Generate Tags File
-You need to generate a TAGS file, which indexes information about the
-MESA options.  A simple Bash script to do this is included as
-maketags.sh.  There's only one command, so users of other shells
-should have no trouble generalizing.  You may want to redo this step
-when you upgrade MESA.
 ** Configure Emacs
 Put the .el file in your load-path and then add
 #+BEGIN_EXAMPLE
 (require 'mesa-minor-mode)
 #+END_EXAMPLE
 to your Emacs init file.
-
 * Usage
-** Start the Mode
-You can toggle the minor-mode manually with
+** Start the Minor Mode
+This is a minor mode because I edit my inlists using f90-mode (mainly
+for the syntax coloring). You can toggle the minor-mode manually with
 #+BEGIN_EXAMPLE
 M-x mesa-minor-mode
 #+END_EXAMPLE
-You can have Emacs start the minor-mode automatically when you edit a
-file whose name starts with inlist, by adding something like
+You can have Emacs automatically start f90-mode and mesa-minor-mode
+when you edit a file whose name starts with inlist, by adding something
+like
 #+BEGIN_EXAMPLE
-(setq auto-mode-alist  (cons '("/inlist[^/]*$" . mesa-minor-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("/inlist[^/]*$" . (lambda () (f90-mode) (mesa-minor-mode))) auto-mode-alist))
 #+END_EXAMPLE
 to your Emacs init file.  (If you're already automatically starting a
-major-mode to edit inlist files, you should probably have that
-major-mode hook start up this minor mode.)
-
+major-mode to edit inlist files, adjust as needed.  I didn't use the
+major-mode hook because I don't want mesa-minor-mode to start every
+time f90-mode does.)
+** Generate Tags File
+If a TAGS file doesn't exist when mesa-minor-mode starts, it creates
+one.  It assumes that your MESA_DIR environment variable is set
+correctly.  To regenerate the TAGS file (for example, after you
+upgrade MESA), use M-x mesa-regen-tags.
 ** Jump to/from a tag
-This is the tags feature I use most when editing a MESA inlist.  The
-command M-. will jump you to a variable's definition in the
+This is the feature I find most useful when editing a MESA inlist.
+The command M-. will jump you to a variable's definition in the
 appropriate .defaults file.  This lets you see the default value and
 surrounding documentation. M-* will jump you back to your place in the
-inlist.  For full details about using tags, read the Emacs docs.
-
+inlist.  For full details about using tags (including searching and
+completion), read the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][Emacs docs]].
 ** Toggle Boolean Values
 The mesa-toggle-boolean function switches an inlist value between true
 and false.  This function is bound to C-c C-t by default.
+** Comment and Uncomment Variables
+To make commenting easy, mesa-minor-mode binds C-c C-c to a function
+that will toggle the comment status of lines, regions, etc.
