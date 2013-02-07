@@ -44,8 +44,8 @@ time f90-mode does.)
 
 I find it useful to do something similar for the .defaults files that
 will be opened for their documentation, but instead of mesa-minor-mode
-I use read-only view-mode, which keeps me from accidentlly confusing
-them with my inlists and editing them accidentally.
+I use read-only view-mode, which keeps me from confusing them with my
+inlists and editing them accidentally.
 #+BEGIN_EXAMPLE
 (setq auto-mode-alist  (cons '("\\.defaults\\'" . (lambda () (f90-mode) (view-mode))) auto-mode-alist))
 #+END_EXAMPLE
