@@ -12,6 +12,10 @@ commenting/uncommenting things.
 I've also produced a [[http://youtu.be/hv6QpIupeww][short screencast]] showing the basic features.
 
 * Installation
+** Prerequisites
+To run the master branch, you need Emacs 23 or 24.  There is a branch
+called emacs22, which should run on Emacs 22.  I have received reports
+that it will not work on Emacs 21 without significant workarounds.
 ** Configure Emacs
 Put the .el file in your load-path and then add
 #+BEGIN_EXAMPLE
@@ -19,11 +23,10 @@ Put the .el file in your load-path and then add
 #+END_EXAMPLE
 to your Emacs init file.
 ** Caveats
-I use this with Emacs 24.2 on OS X, so that's about the only place
-it's had any testing.  (Though I tried it with Emacs 23 and everything
-seemed fine.)  I'm not really much of an elisp hacker, so you
-shouldn't take anything done here as representative of the "right
-way".
+I use this primarily with the latest Emacs version (presently 24.3) on
+Linux and OS X, so that's about the only place it's guaranteed to
+work.  Also, I'm not really much of an elisp hacker, so you shouldn't
+take anything done here as representative of the "right way".
 * Usage
 ** Start the Minor Mode
 This is a minor mode because I edit my inlists using f90-mode (mainly
