@@ -37,13 +37,21 @@
         (replace-match (if (string-equal (match-string 0) ".true.")
                            ".false." ".true.") nil nil))))
 
+;; for compatibility with emacs22; this is borrowed from gnus
+(defun mesa-region-active-p ()
+  "Say whether the region is active."
+  (and (boundp 'transient-mark-mode)
+       transient-mark-mode
+       (boundp 'mark-active)
+       mark-active))
+
 ;; borrowed from http://www.emacswiki.org/emacs/CommentingCode
 (defun mesa-comment-dwim (&optional arg)
   "Replaces default behavior of comment-dwim, when it inserts
 comment at the end of the line."
   (interactive "*P")
   (comment-normalize-vars)
-  (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
+  (if (and (not (mesa-region-active-p)) (not (looking-at "[ \t]*$")))
       (comment-or-uncomment-region
        (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
