@@ -57,6 +57,11 @@
   :group 'mesa
 )
 
+(defconst mesa-rse-include-line
+  "      include 'standard_run_star_extras.inc'"
+  "Line in run_star_extras.f that pulls in default code."
+)
+
 (defun mesa-regen-tags ()
   "Regenerate the tags file for the MESA defaults directory"
   (interactive)
@@ -86,6 +91,21 @@ comment at the end of the line."
        (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
 
+(defun mesa-enable-rse ()
+  "Enable run_star_extras.f by inserting the standard include
+file"
+  (interactive)
+  (save-excursion
+    (beginning-of-buffer)
+    (if (search-forward mesa-rse-include-line nil nil)
+        (progn
+          (narrow-to-region (line-beginning-position) (line-end-position))
+          (insert-file-contents 
+           (concat (getenv "MESA_DIR") "/include/standard_run_star_extras.inc")
+           nil nil nil t)
+          (widen)))))
+      
+
 (define-minor-mode mesa-minor-mode
   "Toggle MESA minor mode in the usual way."
   :init-value nil
@@ -96,6 +116,7 @@ comment at the end of the line."
   '(
     ("\C-c\C-t" . mesa-toggle-boolean)
     ("\C-c\C-c" . mesa-comment-dwim)
+    ("\C-c\C-r" . mesa-enable-rse)
     )
   ;; the body
   (if mesa-minor-mode
