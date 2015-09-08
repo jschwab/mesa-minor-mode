@@ -76,6 +76,13 @@ buffer-local wherever it is set."
   :group 'mesa
 )
 
+(defcustom mesa-use-remote-paths
+  nil
+  "If t, use remote paths for tramp buffers; if nil, always use local paths."
+  :type 'boolean
+  :group 'mesa
+)
+
 (defconst mesa-rse-include-line
   "      include 'standard_run_star_extras.inc'"
   "Line in run_star_extras.f that pulls in default code."
@@ -136,10 +143,18 @@ buffer-local wherever it is set."
     (cdr (assoc "MESA_DIR"
                 (cdr (assoc version mesa-init-data))))))
 
+(defun mesa~prepend-system-name (filename)
+  "Given a filename, (possibly) prepend the remote system name"
+  (let ((remote (file-remote-p (buffer-file-name))))
+    (if (and mesa-use-remote-paths remote)
+        (concat remote filename)
+      filename)))
+
 (defun mesa~prepend-mesa-dir (filename)
   "Append the MESA_DIR to a filename"
   (let ((mesa-dir (mesa-dir-from-version mesa-version)))
-    (concat (file-name-as-directory mesa-dir) filename)))
+    (mesa~prepend-system-name
+     (concat (file-name-as-directory mesa-dir) filename))))
 
 (defun mesa-tags-file ()
   "Create the full path to the TAGS directory"
@@ -170,10 +185,11 @@ buffer-local wherever it is set."
 (defun mesa-regen-tags ()
   "Regenerate the tags file for the MESA defaults directory"
   (interactive)
-  (shell-command (format "etags --language=none --regex=%s -o %s %s"
-                         mesa-tags-regexp
-                         (mesa-tags-file)
-                         (mapconcat 'mesa~prepend-mesa-dir mesa-defaults-files " "))))
+  (let ((default-directory (mesa~prepend-mesa-dir nil)))
+    (shell-command (format "etags --language=none --regex=%s -o %s %s"
+                           mesa-tags-regexp
+                           mesa-tags-file-path
+                           (mapconcat 'identity mesa-defaults-files " ")))))
 
 (defun mesa-change-version ()
   "Change the MESA version being used in this buffer"
