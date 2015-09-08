@@ -186,10 +186,12 @@ buffer-local wherever it is set."
   "Regenerate the tags file for the MESA defaults directory"
   (interactive)
   (let ((default-directory (mesa~prepend-mesa-dir nil)))
-    (shell-command (format "etags --language=none --regex=%s -o %s %s"
-                           mesa-tags-regexp
-                           mesa-tags-file-path
-                           (mapconcat 'identity mesa-defaults-files " ")))))
+    (if (file-exists-p default-directory)
+        (shell-command (format "etags --language=none --regex=%s -o %s %s"
+                               mesa-tags-regexp
+                               mesa-tags-file-path
+                               (mapconcat 'identity mesa-defaults-files " ")))
+      (message "Failed to generate TAGS: %s does not exist" default-directory))))
 
 (defun mesa-change-version ()
   "Change the MESA version being used in this buffer"
@@ -225,15 +227,16 @@ comment at the end of the line."
   "Enable run_star_extras.f by inserting the standard include
 file"
   (interactive)
-  (save-excursion
-    (beginning-of-buffer)
-    (if (search-forward mesa-rse-include-line nil nil)
-        (progn
-          (narrow-to-region (line-beginning-position) (line-end-position))
-          (insert-file-contents
-           (mesa~prepend-mesa-dir "include/standard_run_star_extras.inc")
-           nil nil nil t)
-          (widen)))))
+  (let ((filename (mesa~prepend-mesa-dir "include/standard_run_star_extras.inc")))
+    (if (file-exists-p filename)
+        (save-excursion
+          (beginning-of-buffer)
+          (if (search-forward mesa-rse-include-line nil nil)
+              (progn
+                (narrow-to-region (line-beginning-position) (line-end-position))
+                (insert-file-contents filename nil nil nil t)
+                (widen)))))
+    (message "Failed to insert file: %s does not exist" filename)))
       
 (defcustom mesa-mode-line
   '(:eval (format " MESA[%s]" mesa-version))
@@ -267,7 +270,9 @@ file"
         (if (not (file-exists-p (mesa-tags-file)))
             (mesa-regen-tags))
 
-        (mesa-visit-tags-table))
+        ;; if TAGS does exist, visit it
+        (if (file-exists-p (mesa-tags-file))
+            (mesa-visit-tags-table)))
 
   ;; turn mesa-minor-mode off
     (progn
