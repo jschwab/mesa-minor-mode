@@ -52,23 +52,27 @@ buffer-local wherever it is set."
 (defcustom mesa-tags-file-path
   "TAGS"
   "Name of the TAGS file inside of your MESA project"
+  :type 'string
   :group 'mesa)
 
 (defcustom mesa-tags-regexp
   "'/^[ \\t]+\\([^ \\t!]+\\)[ \\t]*=/\\1/'"
   "Regexp to recognize tags in defaults files"
+  :type 'regexp
   :group 'mesa
 )
 
 (defcustom mesa-default-version
   "git"
   "Default version of MESA"
+  :type 'string
   :group 'mesa
   )
 
 (defcustom mesa-init-file
   "~/.mesa_init"
   "Default MESA init file"
+  :type 'file
   :group 'mesa
 )
 
