@@ -2,43 +2,61 @@
 
 An Emacs minor mode for use with the [[http://mesa.sourceforge.net/][MESA stellar evolution code]].
 
-It makes it easy to take advantage of the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][tag-related features]]
-in Emacs when editing MESA inlists.  The default tag file will include
-everything in the star_job, controls, and pgstar namelists.
+It makes it easy to take advantage of the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][tag-related features]] in
+Emacs when editing MESA inlists.  The default tag file will include
+everything in the star_job, controls, pgstar, binary_job, and
+binary_controls namelists.
 
 There are also a couple functions to help with toggling booleans and
 commenting/uncommenting things.
 
-I've also produced a [[http://youtu.be/hv6QpIupeww][short screencast]] showing the basic features.
+I've produced a [[http://youtu.be/hv6QpIupeww][short screencast]] showing the basic features.
 
 * Installation
 ** Prerequisites
-To run the master branch, you need Emacs 23 or 24.  There is a branch
-called emacs22, which should run on Emacs 22.  I have received reports
-that it will not work on Emacs 21 without significant workarounds.
+To run the master branch, you need Emacs 24.
+
+Create a file named =.mesa_init= in your home directory.  List the
+paths to your various MESA versions using [[http://en.wikipedia.org/wiki/INI_file][ini]] format, as below.
+
+#+BEGIN_EXAMPLE
+  [r7624]
+      MESA_DIR = /path/to/mesa-r7624
+
+  [r6596]
+      MESA_DIR = /path/to/mesa-r6596
+#+END_EXAMPLE
+
+You can have one or more of these entries.  If you have more than one,
+you may want to take a look at [[https://github.com/jschwab/mesa-init][mesa-init]].
+
 ** Configure Emacs
 Put the .el file in your load-path and then add
 #+BEGIN_EXAMPLE
-(require 'mesa-minor-mode)
+  (require 'mesa-minor-mode)
 #+END_EXAMPLE
-to your Emacs init file.
-** Caveats
-I use this primarily with the latest Emacs version (presently 24.3) on
-Linux and OS X, so that's about the only place it's guaranteed to
-work.  Also, I'm not really much of an elisp hacker, so you shouldn't
-take anything done here as representative of the "right way".
-* Usage
-** Start the Minor Mode
+to your Emacs init file
+
+You also want to specify the default version of MESA whose
+documentation you want to emacs to use.  Add
+#+BEGIN_EXAMPLE
+  ;; set default MESA version
+  (setq mesa-default-version "r7624")
+#+END_EXAMPLE
+where "r7624" is the identifier of whatever version of MESA you want
+to be the default.
+
 This is a minor mode because I edit my inlists using f90-mode (mainly
 for the syntax coloring). You can toggle the minor-mode manually with
 #+BEGIN_EXAMPLE
 M-x mesa-minor-mode
 #+END_EXAMPLE
+
 You can have Emacs automatically start f90-mode and mesa-minor-mode
-when you edit a file whose name starts with inlist, by adding something
-like
+when you edit a file whose name starts with inlist, by adding
+something like
 #+BEGIN_EXAMPLE
-(setq auto-mode-alist  (cons '("/inlist[^/]*$" . (lambda () (f90-mode) (mesa-minor-mode))) auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("/inlist[^/]*$" . (lambda () (f90-mode) (mesa-minor-mode))))
 #+END_EXAMPLE
 to your Emacs init file.  (If you're already automatically starting a
 major-mode to edit inlist files, adjust as needed.  I didn't use the
@@ -50,13 +68,22 @@ will be opened for their documentation, but instead of mesa-minor-mode
 I use read-only view-mode, which keeps me from confusing them with my
 inlists and editing them accidentally.
 #+BEGIN_EXAMPLE
-(setq auto-mode-alist  (cons '("\\.defaults\\'" . (lambda () (f90-mode) (view-mode))) auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("\\.defaults\\'" . (lambda () (f90-mode) (view-mode))))
 #+END_EXAMPLE
+** Caveats
+I use this primarily with the latest Emacs version (presently 24.5) on
+Linux, so that's where it is least likely to be broken.  Also, I'm not
+much of an elisp hacker, so you shouldn't take anything done here as
+representative of the "right way".
+* Usage
 ** Generate Tags File
 If a TAGS file doesn't exist when mesa-minor-mode starts, it creates
-one.  It assumes that your MESA_DIR environment variable is set
-correctly.  To regenerate the TAGS file (for example, after you
-upgrade MESA), use M-x mesa-regen-tags.
+one.  To regenerate the TAGS file (for example, after you upgrade
+MESA), use M-x mesa-regen-tags.
+** Change MESA Version
+If you specified multiple MESA versions in your =.mesa_init=, you can
+use =C-c C-v= to switch where the minor mode will look for the
+defaults files.
 ** Jump to/from a tag
 This is the feature I find most useful when editing a MESA inlist.
 The command M-. will jump you to a variable's definition in the
