@@ -1,5 +1,7 @@
 * mesa-minor-mode
 
+*This software is unmaintained; it is superseded by [[https://github.com/jschwab/mesa-major-mode][mesa-major-mode]].*
+
 An Emacs minor mode for use with the [[http://mesa.sourceforge.net/][MESA stellar evolution code]].
 
 It makes it easy to take advantage of the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags][tag-related features]] in
